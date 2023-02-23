@@ -1,81 +1,120 @@
 <?php get_header(); ?>
+<style>
+   .guide .container{
+	background-image: url('<?php the_field('zdjecie_sekcji_drugiej');?>') ;
+	background-position:  right bottom;
+	background-repeat:  no-repeat;
+}
+
+.pater-description {
+	background-image: url('<?php the_field('zdjecie')?>;');
+	background-repeat: no-repeat;
+	background-position: bottom left;
+	min-height: 446px;
+	padding-top: 3em;
+	background-attachment: fixed;
+}
+
+.our-services {
+	background: url(<?php the_field('our_services_img');?>) bottom right no-repeat #dadada;
+	position: relative;
+	padding: 4.6875em 0 11.875em;
+}
+</style>
 <main>
-    <section class="first-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-7">
-                    <?php $args = array('post_type' => 'post', 'posts_per_page' => 1, 'order' => 'DESC');
-                        $wp_query = new WP_Query($args);
-                        if (have_posts()) : while (have_posts()) : the_post();?>
-                    <article class="post-card">
-                        <div class="post-card-inner">
-                            <div class="post-image-wrapper">
-                                <h3 class="post-title"><?php the_title(); ?></h3>
-                                <div class="post-card-body">
-                                    <div class="row">
-                                        <div class="col-sm-4 position-img">
-                                            <img class="post-image" src="<?php echo get_the_post_thumbnail_url(); ?>" alt="">
-                                        </div>
-                                        <div class="col-sm-8">
-                                            <?php the_excerpt(); ?>
-                                            <a href="<?php echo get_permalink(); ?>" class="btn btn-lead">Czytaj więcej</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-                    <?php endwhile; endif; ?>
-                </div>
-
-                <div class="col-lg-5">
-                    <div class="form-block">
-                        <h3 class="search-blog"> Szukaj na blogu</h3>
-                        <form method="get" class="widget-search" id="searchform" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-                            <input type="text" class="field" name="s" id="s" placeholder="<?php esc_attr_e('Czego szukasz?', 'test' ); ?> " />
-                            <button class="searchform-button">Szukaj</button>
-                        </form>
-                    </div>
-                </div>
+   <div class="main-header" style="background-image: url(<?php the_field('glowny_obrazek'); ?>)">
+      <div class="container">
+         <h1 class="site-title white-text"><?php the_field('naglowek');?></h1>
+      </div>
+   </div>
+   <div class="pater-description dark-color">
+      <div class="container">
+         <div class="row">
+            <div class="col-lg-6">
+               <div class="pater-description__img">
+               </div>
             </div>
-        </div>
-    </section>
-
-    <section class="category-blog section-padding">
-        <div class="container">
-            <h2 class="section-title"> Wszystkie kategorie</h2>
-            <div class="blog-posts">
-                <div class="row mb-3">
-                <?php foreach ( get_categories() as $category ) : ?>
-                    <?php echo '<h3 class="category-title">'.$category->name.'</h3>'; ?>
-
-                    <?php
-                        $args = array('post_type' => 'post', 'cat'=> $category->term_id, 'posts_per_page' => 3, 'order' => 'DESC');
-                        $wp_query = new WP_Query($args);
-                        if (have_posts()) : while (have_posts()) : the_post();?>
-
-                        <article class="post-card col-sm-6 col-lg-4">
-                            <div class="post-card-inner">
-                            <div class="post-image-wrapper">
-                                <h4 class="post-title"><?php the_title(); ?></h4>
-                                <img class="post-image" src="<?php echo get_the_post_thumbnail_url(); ?>" alt="">
-                            </div>
-                            <div class="post-card-body">
-                                <?php the_excerpt(); ?>
-                                <a href="<?php echo get_permalink(); ?>" class="btn btn-lead">Czytaj więcej</a>
-                            </div>
-                            </div>
-
-                        </article>
-                    <?php endwhile;
-                    endif; ?>
-
-                <?php endforeach; ?>
-                </div>
+            <div class="col-lg-6">
+               <div class="box">
+                  <?php the_field('opis_strony')?>
+               </div>
             </div>
-        </div>
-    </section>
+         </div>
+      </div>
+   </div>
 
+   <section class="our-services">
+      <div class="container">
+         <h2 class="white-text section-title mb-0"><?php the_field('tytul_sekcji_pierwszej');?></h2>
+         <div class="accordion mt-2" id="faqAccordion">
+            <?php if(have_rows('uslugi')): while(have_rows('uslugi')): the_row();
+               $uslugi = get_sub_field('nazwa_uslugi');
+               $opis_uslugi = get_sub_field('opis_uslugi');
+               $item_id = uniqid() ?>
+            <div class="accordion-item">
+               <h2 class="accordion-header" id="heading<?php echo $item_id ?>">
+               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?php echo $item_id ?>" aria-expanded="false" aria-controls="collapse<?php echo $item_id ?>">
+                  <span class="accordion-line"></span>
+                  <?php echo $uslugi?>
+               </button>
+               </h2>
+               <div id="collapse<?php echo $item_id ?>" class="accordion-collapse collapse" aria-labelledby="heading<?php echo $item_id ?>" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body">
+                     <?php echo $opis_uslugi?>
+                  </div>
+               </div>
+            </div>
+            <?php endwhile; endif;?>
+         </div>
+      </div>
+
+   </section>
+
+   <section class="guide">
+      <div class="container">
+         <div class="row">
+            <div class="col-lg-6">
+               <div class="guide-text">
+               <h2 class="white-text section-title"><?php the_field('tytul_sekcji_drugiej');?></h2>
+                  <?php the_field('opis_sekcji_drugiej');?>
+               </div>
+               <a href="/poradnik" class="btn p-btn">więcej informacji</a>
+            </div>
+            <div class="col-lg-6">
+            </div>
+         </div>
+      </div>
+   </section>
+
+   <section class="contact-page">
+      <div class="container">
+         <div class="row">
+               <div class="col-lg-8">
+                  <div class="map">
+                  <?php echo do_shortcode('[asdf_asdf_qwer]');?>
+                  </div>
+               </div>
+               <div class="col-lg-4">
+                  <address class="adress-contact">
+                     <h2 class="contact-title section-title">Kontakt</h2>
+                     <ul class="contact-list">
+                           <li class="contact-list-item"><span>Telefon:</span>
+                              <a href="tel:<?php the_field('telefon');?>"><?php the_field('telefon');?></a>
+                           </li>
+                           <li class="contact-list-item"><span>Email:</span>
+                              <a href="mailto:<?php the_field('email');?>"><?php the_field('email');?></a>
+                           </li>
+                           <li class="contact-list-item"><span>Adres:</span>
+                           <?php the_field('adres_field');?>
+                           </li>
+                     </ul>
+                  </address>
+               </div>
+         </div>
+      </div>
+   </section>
 
 </main>
+
+
 <?php get_footer(); ?>
